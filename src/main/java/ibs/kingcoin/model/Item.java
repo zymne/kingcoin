@@ -1,10 +1,9 @@
 package ibs.kingcoin.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Item {
@@ -17,10 +16,15 @@ public class Item {
 
     private Integer price;
 
-    private String country;
+    @ManyToOne
+    private Country country;
 
     /*Coin, Banknote, Coin Set, Banknote Set, Mixed Set*/
-    private String category;
+    @ManyToOne
+    private Category category;
+
+    @OneToMany(mappedBy = "item")
+    private List<Image> images;
 
     private Date issueYear;
 
@@ -51,18 +55,18 @@ public class Item {
     }
 
     public String getCountry() {
-        return country;
+        return country.getName();
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
     public String getCategory() {
-        return category;
+        return category.getName();
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -82,5 +86,13 @@ public class Item {
 
     public void setIssueYear(Date issueYear) {
         this.issueYear = issueYear;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }

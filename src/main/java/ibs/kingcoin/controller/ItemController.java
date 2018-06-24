@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
-@Controller
+@RestController
 //TODO: Remove cross origin after debugging
 @CrossOrigin
 @RequestMapping("/items")
@@ -24,32 +25,18 @@ public class ItemController {
     ItemRepository itemRepository;
 
     @GetMapping(produces = "application/json")
-    public @ResponseBody String listItems() throws JsonProcessingException {
-
-        ObjectMapper mapper = new ObjectMapper();
+    public @ResponseBody Iterable<Item> listItems() throws JsonProcessingException {
 
         Iterable<Item> items = itemRepository.findAll();
 
-        String result = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(items);
-
-        return result;
+        return items;
     }
 
     @PostMapping(consumes = "application/json")
-    public @ResponseBody Integer create(HttpServletRequest req) throws IOException {
-        BufferedReader reader = req.getReader();
-        String line = null;
-        while((line = reader.readLine()) != null ) {
-            System.out.println(line);
-        }
+    public @ResponseBody Long create(@RequestBody Item item) throws IOException {
 
-        System.out.println("Received an item with title:" + req.getReader());
-        return 0;
-    }
 
-    @CrossOrigin
-    @GetMapping("/corscheck")
-    public @ResponseBody String checkCors() {
-        return "CORS is enabled.";
+        item = itemRepository.save(item);
+        return item.getId();
     }
 }
