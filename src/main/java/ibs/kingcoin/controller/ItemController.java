@@ -2,7 +2,11 @@ package ibs.kingcoin.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ibs.kingcoin.dao.CategoryRepository;
+import ibs.kingcoin.dao.CountryRepository;
 import ibs.kingcoin.dao.ItemRepository;
+import ibs.kingcoin.model.Category;
+import ibs.kingcoin.model.Country;
 import ibs.kingcoin.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -24,6 +28,12 @@ public class ItemController {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    CountryRepository countryRepository;
+
     @GetMapping(produces = "application/json")
     public @ResponseBody Iterable<Item> listItems() throws JsonProcessingException {
 
@@ -33,10 +43,23 @@ public class ItemController {
     }
 
     @PostMapping(consumes = "application/json")
-    public @ResponseBody Long create(@RequestBody Item item) throws IOException {
+    public @ResponseBody Item create(@RequestBody Item item) throws IOException {
 
+        String categoryName = item.getCategory();
+        String countryName = item.getCountry();
+
+        Category category = categoryRepository.findByName(categoryName);
+        Country country =  countryRepository.findByName(countryName);
+
+        //ResponseBuilder.error().body() or generate Domain Specific Exception
+        if(category == null || country == null)
+            return null;
+
+
+        item.setCategory(category);
+        item.setCountry(country);
 
         item = itemRepository.save(item);
-        return item.getId();
+        return item;
     }
 }

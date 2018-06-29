@@ -1,11 +1,14 @@
 package ibs.kingcoin.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Item {
 
     @Id
@@ -28,7 +31,7 @@ public class Item {
 
     private Date issueYear;
 
-    private Boolean published;
+    private Boolean published = true;
 
     public Long getId() {
         return id;
@@ -79,6 +82,10 @@ public class Item {
     }
 
     public int getIssueYear() {
+
+        if(issueYear == null)
+            return -1;
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(issueYear);
         return calendar.get(Calendar.YEAR);
