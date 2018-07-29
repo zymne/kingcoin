@@ -1,5 +1,7 @@
 package ibs.kingcoin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +18,7 @@ public class Image {
 
     private Boolean cover;
 
+    @JsonIgnore
     @ManyToOne
     private Item item;
 
@@ -41,5 +44,14 @@ public class Image {
 
     public void setCover(Boolean cover) {
         this.cover = cover;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+        item.getImages().add(this);
     }
 }

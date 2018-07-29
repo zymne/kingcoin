@@ -1,5 +1,7 @@
 package ibs.kingcoin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,6 +17,7 @@ public class Category {
 
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Item> items;
 
