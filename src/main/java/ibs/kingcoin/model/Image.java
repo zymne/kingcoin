@@ -52,6 +52,6 @@ public class Image {
 
     public void setItem(Item item) {
         this.item = item;
-        item.getImages().add(this);
+        item.getOriginalImages().add(this);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,9 +19,9 @@ import java.nio.file.Paths;
 @Controller
 public class ImageController {
 
+    @CrossOrigin
     @GetMapping("images/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
+    public @ResponseBody ResponseEntity<Resource> serveImage(@PathVariable String filename) {
         Resource file = null;
 
         //TODO: Replace this with FileSystemStorageService

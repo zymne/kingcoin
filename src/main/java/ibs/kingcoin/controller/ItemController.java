@@ -18,11 +18,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 //TODO: Remove cross origin after debugging
 @CrossOrigin
-@RequestMapping("/items")
+@RequestMapping(value = "/items", produces = "application/json")
 public class ItemController {
 
     @Autowired
@@ -34,12 +36,27 @@ public class ItemController {
     @Autowired
     CountryRepository countryRepository;
 
-    @GetMapping(produces = "application/json")
-    public @ResponseBody Iterable<Item> listItems() throws JsonProcessingException {
+    @GetMapping
+    public @ResponseBody Iterable<Item> list() throws JsonProcessingException {
 
         Iterable<Item> items = itemRepository.findAll();
-
         return items;
+    }
+
+    @GetMapping("{id}")
+    public @ResponseBody Item getItem(@PathVariable String id) {
+        Item item = itemRepository.findById(Long.valueOf(id)).get();
+        return item;
+    }
+
+    @PostMapping("delete")
+    public @ResponseBody Integer deleteSelected(@RequestBody List<String> ids) {
+        int deletedCount = 0;
+        for (String id: ids) {
+            itemRepository.deleteById(Long.valueOf(id));
+            ++deletedCount;
+        }
+        return deletedCount;
     }
 
     @PostMapping(consumes = "application/json")

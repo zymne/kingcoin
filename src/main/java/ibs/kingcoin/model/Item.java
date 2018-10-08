@@ -1,11 +1,13 @@
 package ibs.kingcoin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,7 +28,8 @@ public class Item {
     @ManyToOne
     private Category category;
 
-    @OneToMany(mappedBy = "item")
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Image> images;
 
     private Date issueYear;
@@ -95,8 +98,13 @@ public class Item {
         this.issueYear = issueYear;
     }
 
-    public List<Image> getImages() {
+    @JsonIgnore
+    public List<Image> getOriginalImages() {
         return images;
+    }
+
+    public List<String> getImages() {
+        return images.stream().map( x -> x.getUrl()).collect(Collectors.toList());
     }
 
     public void setImages(List<Image> images) {
